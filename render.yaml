@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: aerobus-web
+    env: python
+    plan: starter
+    repo: https://github.com/<your-username>/<your-repo>
+    region: oregon
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn run:app --workers 4 --bind 0.0.0.0:$PORT"
+
+# Example PostgreSQL service (managed) - create separately in Render or uncomment to enable via render.yaml
+# databases:
+#   - name: aerobus-db
+#     plan: starter
+#     region: oregon
+
+# After creating the DB on Render, set the `DATABASE_URL` environment variable on the web service to the
+# connection string Render provides (it will be available as DATABASE_URL). Also set `SECRET_KEY`.

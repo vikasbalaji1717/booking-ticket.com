@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Buses - AeroBus{% endblock %}
+
+{% block content %}
+<!-- Search container storing parameters in HTML5 attributes for JS API access -->
+<div id="search-page" 
+     class="container" 
+     data-source="{{ source }}" 
+     data-destination="{{ destination }}" 
+     data-date="{{ date }}"
+     data-provider="{{ provider }}">
+     
+  <div class="search-page-layout">
+    
+    <!-- Left Sidebar: Filters panel -->
+    <aside class="filters-panel">
+      <div class="filter-section">
+        <h3 class="filter-title">Bus Type</h3>
+        <div class="filter-checkbox-group">
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="filter-ac" class="filter-input"> AC Buses
+          </label>
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="filter-non-ac" class="filter-input"> Non-AC Buses
+          </label>
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="filter-sleeper" class="filter-input"> Sleeper Comfort
+          </label>
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="filter-seater" class="filter-input"> Seater Coaches
+          </label>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Operator</h3>
+        <select id="provider-select" class="form-input">
+          <option value="all" {% if provider == 'all' %}selected{% endif %}>All Providers</option>
+          <option value="internal" {% if provider == 'internal' %}selected{% endif %}>AeroBus</option>
+          <option value="ksrtc" {% if provider == 'ksrtc' %}selected{% endif %}>KSRTC</option>
+        </select>
+      </div>
+      
+      <div class="filter-section">
+        <h3 class="filter-title">Max Ticket Price</h3>
+        <input type="range" id="price-range-slider" min="100" max="3000" step="50" style="width:100%;">
+        <div class="filter-range-values">
+          <span>Min: Rs. 100</span>
+          <span id="price-slider-value" class="font-bold" style="color:var(--primary);">Rs. 3000</span>
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <h3 class="filter-title">Departure Time</h3>
+        <div class="filter-checkbox-group">
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="time-morning" class="filter-input"> Morning (Before 12 PM)
+          </label>
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="time-afternoon" class="filter-input"> Afternoon (12 PM - 5 PM)
+          </label>
+          <label class="filter-checkbox-label">
+            <input type="checkbox" id="time-evening" class="filter-input"> Evening (After 5 PM)
+          </label>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Right Panel: Bus Listings -->
+    <section class="results-container">
+      <div class="results-header">
+        <div>
+          <h2>Available Coaches</h2>
+          <p class="text-muted" style="font-size:0.9rem;">From <strong>{{ source }}</strong> to <strong>{{ destination }}</strong> on {{ date }}</p>
+        </div>
+        <div id="result-count" class="badge badge-success" style="font-size:0.875rem;">
+          0 Buses Found
+        </div>
+      </div>
+      
+      <!-- Bus lists wrapper -->
+      <div id="results-list" class="results-cards-container">
+        <!-- Rendered asynchronously via JS -->
+      </div>
+    </section>
+    
+  </div>
+</div>
+{% endblock %}

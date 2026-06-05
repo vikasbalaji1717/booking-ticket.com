@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile & History - AeroBus{% endblock %}
+
+{% block content %}
+<div id="profile-page" class="container" style="padding: 3rem 1.5rem;">
+  
+  <div style="display:grid; grid-template-columns: 280px 1fr; gap: 2.5rem; align-items: start;">
+    
+    <!-- Left column: Profile card -->
+    <div class="card-panel" style="text-align:center;">
+      <div style="height:6rem; width:6rem; background:var(--primary-light); color:var(--primary); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+        <!-- User avatar SVG icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:3rem; width:3rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+      </div>
+      
+      <h3 style="font-size:1.25rem; font-weight:700;">{{ current_user.username }}</h3>
+      <p class="text-muted" style="font-size:0.875rem; margin-top:0.25rem;">{{ current_user.email }}</p>
+      
+      {% if current_user.is_admin %}
+        <span class="badge badge-success" style="margin-top:0.75rem; display:inline-block;">System Administrator</span>
+      {% else %}
+        <span class="badge badge-warning" style="margin-top:0.75rem; display:inline-block;">AeroTraveler</span>
+      {% endif %}
+      
+      <div style="border-top:1px solid var(--border-color); margin-top:1.5rem; padding-top:1rem; text-align:left; font-size:0.85rem;" class="text-muted">
+        Joined AeroBus: {{ current_user.created_at.strftime('%b %d, %Y') }}
+      </div>
+    </div>
+    
+    <!-- Right column: Bookings list -->
+    <div>
+      <div class="data-panel" style="margin-bottom:0;">
+        <div class="data-panel-header">
+          <span class="data-panel-title">My Ticket Bookings</span>
+        </div>
+        
+        <!-- Table container -->
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>PNR</th>
+                <th>Journey Route</th>
+                <th>Journey Date</th>
+                <th>Seats Allocation</th>
+                <th>Paid Amount</th>
+                <th>Status</th>
+                <th>Operations</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Loaded asynchronously via JS -->
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+{% endblock %}

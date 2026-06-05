@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}AeroBus - Book Bus Tickets Online{% endblock %}
+
+{% block content %}
+<div id="home-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <h1 class="hero-title">Your Journey Begins Here</h1>
+      <p class="hero-subtitle">Search and book bus tickets to over 500+ routes across the country with premium Volvo coaches, sleeper comfort, and unmatched safety.</p>
+    </div>
+  </section>
+
+  <!-- Search Card Widget -->
+  <section class="container search-widget-container">
+    <div class="search-widget">
+      <form id="hero-search-form" action="{{ url_for('views.search') }}" method="GET">
+        <div class="search-grid">
+          <div class="form-group">
+            <label for="source-select">From (Source City)</label>
+            <select name="source" id="source-select" class="form-input" required>
+              <option value="" disabled selected>Select Source</option>
+              {% for src in sources %}
+                <option value="{{ src }}">{{ src }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="dest-select">To (Destination City)</label>
+            <select name="destination" id="dest-select" class="form-input" required>
+              <option value="" disabled selected>Select Destination</option>
+              {% for dest in destinations %}
+                <option value="{{ dest }}">{{ dest }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="provider-select">Operator</label>
+            <select name="provider" id="provider-select" class="form-input">
+              <option value="all" selected>All Providers</option>
+              <option value="internal">AeroBus</option>
+              <option value="ksrtc">KSRTC</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="journey-date">Date of Journey</label>
+            <input type="date" name="date" id="journey-date" class="form-input" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%; height:2.75rem;">
+            <!-- Inline Search Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:1.25rem; width:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            Search Buses
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Why Choose Us / Features -->
+  <section class="container features-section">
+    <h2 class="section-title">Why Book With AeroBus?</h2>
+    <p class="section-subtitle">We focus on delivering high class comfort, safety, and security to make your travel experience smooth and worry-free.</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+        </div>
+        <h3>100% Secure Payments</h3>
+        <p>Book with peace of mind. We use bank-grade transaction logs supporting Card and instant UPI simulations.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <h3>Instant Cancellation</h3>
+        <p>Change of plans? Cancel your tickets with a single click from your profile page and get instantaneous refund logs.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+        </div>
+        <h3>Interactive Seat Grid</h3>
+        <p>Choose exactly where you sit. Our live bus selector avoids double bookings and shows seats by gender layouts.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs Section -->
+  <section class="faq-section" id="faqs">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Got questions about booking or cancellations? We have answers to help make your booking easier.</p>
+      
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How do I cancel my booking?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+          <div class="faq-answer">
+            You can cancel your ticket by logging into your account, navigating to the "My Bookings" page, and clicking the "Cancel" button next to your active booking. Note that cancellations are only allowed before the departure day.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>Is it mandatory to carry a physical copy of my e-ticket?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+          <div class="faq-answer">
+            No, a physical printout is not mandatory. You can show the PDF ticket downloaded onto your phone or present the PNR booking SMS along with a valid photo ID (Aadhar Card, Driving License, etc.) during boarding.
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">
+            <span>How are refunds processed for cancelled tickets?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+          </div>
+          <div class="faq-answer">
+            Once you click cancel on your dashboard, the system initiates the refund simulation instantly. The refund status in your transaction logs changes to "Refunded", and in a production scenario, the amount is credited back to your original payment source.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section class="container contact-section" id="contact">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h2>Get in Touch With Us</h2>
+        <p>Have questions about your bus route or need help with a booking dispute? Contact our round-the-clock support desk and our agents will assist you.</p>
+        
+        <div class="contact-details">
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+            </div>
+            <div>
+              <div class="font-bold">Call Center Support</div>
+              <div class="text-muted">+1 (800) 555-0199 (Toll Free)</div>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <div>
+              <div class="font-bold">Email Helpdesk</div>
+              <div class="text-muted">support@aerobus.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-panel" style="margin-bottom:0;">
+        <h3>Send Message</h3>
+        <form onsubmit="event.preventDefault(); showToast('Your message has been sent successfully. Support will contact you shortly!', 'success'); this.reset();" style="margin-top:1.5rem;">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-input" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-input" placeholder="you@domain.com" required>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea class="form-input" rows="4" placeholder="How can we help you?" style="resize:none;" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set min date of picker to today
+    const picker = document.getElementById('journey-date');
+    if (picker) {
+      picker.min = new Date().toISOString().split('T')[0];
+      // Default date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      picker.value = tomorrow.toISOString().split('T')[0];
+    }
+    
+    // Ensure "From" and "To" lists are synchronized
+    const srcSelect = document.getElementById('source-select');
+    const destSelect = document.getElementById('dest-select');
+    
+    srcSelect.addEventListener('change', () => {
+      // Set the "To" selection destination value if it is identical to From
+      if (srcSelect.value === destSelect.value) {
+        destSelect.value = '';
+      }
+    });
+  });
+</script>
+{% endblock %}

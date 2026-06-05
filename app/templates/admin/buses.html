@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Fleet - AeroBus{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="admin-buses-panel" class="admin-layout">
+  
+  <!-- Sidebar Menu -->
+  <aside class="admin-sidebar">
+    <a href="{{ url_for('views.admin_dashboard') }}" class="sidebar-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" /></svg>
+      Dashboard Overview
+    </a>
+    <a href="{{ url_for('views.admin_bookings') }}" class="sidebar-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+      Verify Bookings
+    </a>
+    <a href="{{ url_for('views.admin_buses') }}" class="sidebar-link active">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+      Manage Fleet
+    </a>
+    <a href="{{ url_for('views.admin_routes') }}" class="sidebar-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+      Manage Routes
+    </a>
+  </aside>
+  
+  <!-- Main Contents -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <div class="admin-title">
+        <h1>Bus Fleet Management</h1>
+        <p>Register new transport coaches, configure capacity, and select amenities.</p>
+      </div>
+      <button onclick="openAddBusModal()" class="btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:1.25rem; width:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+        Add Bus Coach
+      </button>
+    </div>
+    
+    <!-- Table of Fleet -->
+    <div class="data-panel">
+      <div class="data-panel-header">
+        <span class="data-panel-title">Fleet List</span>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Bus Number</th>
+              <th>Coach Name</th>
+              <th>Bus Type</th>
+              <th>Seating Capacity</th>
+              <th>Operations</th>
+            </tr>
+          </thead>
+          <tbody id="buses-table-body">
+            <!-- Loaded dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  
+</div>
+
+<!-- Add/Edit Bus Modal -->
+<div id="bus-modal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="bus-modal-title">Add New Bus</h3>
+      <span onclick="toggleModal('bus-modal', 'close')" class="modal-close">&times;</span>
+    </div>
+    
+    <form id="bus-editor-form">
+      <div class="modal-body">
+        <input type="hidden" id="bus-id-field">
+        
+        <div class="form-group">
+          <label for="bus-number-input">Bus Registration Number</label>
+          <input type="text" id="bus-number-input" class="form-input" placeholder="DL-01-A-1234" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="bus-name-input">Coach Name / Travel Service</label>
+          <input type="text" id="bus-name-input" class="form-input" placeholder="Volvo Multi-Axle / AeroCruiser" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bus-type-select">Bus Type</label>
+            <select id="bus-type-select" class="form-input">
+              <option value="AC Sleeper">AC Sleeper</option>
+              <option value="AC Seater">AC Seater</option>
+              <option value="Non-AC Sleeper">Non-AC Sleeper</option>
+              <option value="Non-AC Seater">Non-AC Seater</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="bus-capacity-input">Seating Capacity</label>
+            <input type="number" id="bus-capacity-input" class="form-input" min="10" max="60" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="bus-amenities-input">Amenities (Comma separated)</label>
+          <input type="text" id="bus-amenities-input" class="form-input" placeholder="WiFi, Charger, Water, Blanket">
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" onclick="toggleModal('bus-modal', 'close')" class="btn btn-secondary">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Details</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

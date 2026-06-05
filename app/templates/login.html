@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - AeroBus{% endblock %}
+
+{% block content %}
+<div id="auth-page" style="display:flex; align-items:center; justify-content:center; padding: 4rem 1rem; min-height: calc(100vh - 12rem);">
+  <div class="card-panel" style="width:100%; max-width:420px; box-shadow:var(--shadow-lg);">
+    <div style="text-align:center; margin-bottom:2rem;">
+      <h2 style="margin:0; font-size:1.75rem;">Sign In</h2>
+      <p class="text-muted" style="font-size:0.9rem;">Enter your account details to continue.</p>
+    </div>
+
+    <form id="login-form" method="POST" action="{{ url_for('auth.login') }}">
+      <div class="form-group">
+        <label for="login-email">Email Address</label>
+        <input type="email" id="login-email" name="email" class="form-input" placeholder="you@domain.com" required autocomplete="email">
+      </div>
+
+      <div class="form-group" style="margin-bottom:2rem;">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%; height:2.75rem; margin-bottom:1.5rem;">Sign In</button>
+
+      <div style="text-align:center; font-size:0.9rem;" class="text-muted">
+        Don't have an account? <a href="{{ url_for('views.signup_view') }}" class="text-primary-color font-bold">Register here</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

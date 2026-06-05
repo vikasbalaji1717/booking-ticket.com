@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AeroBus - Book Bus Tickets Online{% endblock %}</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="{% block meta_description %}Book bus tickets online at the lowest fares with AeroBus. Enjoy secure payment, real-time seat tracking, and premium travel comforts.{% endblock %}">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+  
+  <!-- Theme Controller (Runs early to prevent flashing) -->
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="container navbar">
+      <a href="{{ url_for('views.index') }}" class="logo" id="site-logo">
+        <!-- Inline Bus Icon SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 11.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5.67 1.5 1.5 1.5 1.5-.67 1.5-1.5zm-9 0c0-.83-.67-1.5-1.5-1.5S6 10.67 6 11.5 6.67 13 7.5 13 9 12.33 9 11.5zm11.5-3.5L20 8V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3l-.5.5c-1 1-1.5 2.2-1.5 3.5v5c0 1.1.9 2 2 2h1v1c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-1h4v1c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-1h1c1.1 0 2-.9 2-2v-5c0-1.3-.5-2.5-1.5-3.5zm-2.5-3v3H6V5h12zm2 12H4v-4c0-.9.3-1.8.9-2.4l.6-.6h13l.6.6c.6.6.9 1.5.9 2.4v4z"/></svg>
+        <span>{{ site_name }}</span>
+      </a>
+      
+      <nav>
+        <ul class="nav-links">
+          <li><a href="{{ url_for('views.index') }}">Home</a></li>
+          <li><a href="{{ url_for('views.index') }}#faqs">FAQs</a></li>
+          <li><a href="{{ url_for('views.index') }}#contact">Contact</a></li>
+          {% if current_user %}
+            <li><a href="{{ url_for('views.profile') }}">My Bookings</a></li>
+            {% if current_user.is_admin %}
+              <li><a href="{{ url_for('views.admin_dashboard') }}" class="text-primary-color font-bold">Admin Panel</a></li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="btn btn-secondary btn-sm" aria-label="Toggle Dark Mode" style="display: flex; align-items: center; gap: 0.25rem;">
+          <!-- Content dynamically rendered via theme.js -->
+        </button>
+        
+        {% if current_user %}
+          <div style="display:flex; align-items:center; gap: 1rem;">
+            <span class="text-muted" style="font-size:0.9rem;">Hi, <strong>{{ current_user.username }}</strong></span>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-sm">Logout</a>
+          </div>
+        {% else %}
+          <a id="login-link" href="{{ url_for('views.login_view') }}" class="btn btn-primary btn-sm">Login / Signup</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Message Notifications -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div style="max-width:1200px; margin: 1.5rem auto 0 auto; padding: 0 1.5rem;">
+        {% for category, message in messages %}
+          <div class="toast toast-{{ 'danger' if category == 'error' or category == 'danger' else category }}" style="position:static; margin-bottom:0.75rem; width:100%;">
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content Block -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <a href="/" class="logo" style="color: var(--text-primary);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 11.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5.67 1.5 1.5 1.5 1.5-.67 1.5-1.5zm-9 0c0-.83-.67-1.5-1.5-1.5S6 10.67 6 11.5 6.67 13 7.5 13 9 12.33 9 11.5zm11.5-3.5L20 8V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3l-.5.5c-1 1-1.5 2.2-1.5 3.5v5c0 1.1.9 2 2 2h1v1c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-1h4v1c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-1h1c1.1 0 2-.9 2-2v-5c0-1.3-.5-2.5-1.5-3.5zm-2.5-3v3H6V5h12zm2 12H4v-4c0-.9.3-1.8.9-2.4l.6-.6h13l.6.6c.6.6.9 1.5.9 2.4v4z"/></svg>
+          <span>{{ site_name }}</span>
+        </a>
+        <p>Providing the most convenient and secure bus ticket booking experience. Reach hundreds of destinations on our premium and comfortable coaches.</p>
+      </div>
+      <div>
+        <h4 class="footer-heading">Services</h4>
+        <ul class="footer-links">
+          <li><a href="/">Search Tickets</a></li>
+          <li><a href="/">Reserve Sleeper Seats</a></li>
+          <li><a href="/">Premium Volvo Fleet</a></li>
+          <li><a href="/">Corporate Booking</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Support</h4>
+        <ul class="footer-links">
+          <li><a href="#faqs">Frequently Asked Questions</a></li>
+          <li><a href="#contact">Contact Support</a></li>
+          <li><a href="/">Privacy Policy</a></li>
+          <li><a href="/">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-heading">Company</h4>
+        <ul class="footer-links">
+          <li><a href="/">About Us</a></li>
+          <li><a href="/">Careers</a></li>
+          <li><a href="/">Press Kits</a></li>
+          <li><a href="/">Partner Program</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 AeroBus Technologies Pvt Ltd. All rights reserved.</p>
+      <p>Made with &hearts; for premium travel comfort</p>
+    </div>
+  </footer>
+
+  <!-- App Core JS -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

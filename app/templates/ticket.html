@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Ticket Confirmation - AeroBus{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Print-only CSS layout adjustments */
+  @media print {
+    header, footer, .ticket-actions, #theme-toggle {
+      display: none !important;
+    }
+    body {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    .ticket-receipt-card {
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+      margin: 0 !important;
+      max-width: 100% !important;
+    }
+    .ticket-header {
+      background: #4f46e5 !important;
+      color: #ffffff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  
+  <!-- Success Ticket receipt container -->
+  <div class="ticket-receipt-card">
+    
+    <!-- Receipt Header -->
+    <div class="ticket-header">
+      <h1>Booking Confirmed!</h1>
+      <p>Thank you for choosing AeroBus. Have a safe journey.</p>
+    </div>
+    
+    <!-- Receipt Body -->
+    <div class="ticket-body">
+      <div class="ticket-row-grid">
+        <div class="ticket-data-item">
+          <label>PNR Number</label>
+          <span style="font-size:1.4rem; color:var(--primary);">{{ booking.pnr }}</span>
+        </div>
+        <div class="ticket-data-item" style="text-align:right;">
+          <label>Status</label>
+          {% if booking.status == 'Confirmed' %}
+            <span class="badge badge-success" style="font-size:0.9rem;">{{ booking.status }}</span>
+          {% else %}
+            <span class="badge badge-danger" style="font-size:0.9rem;">{{ booking.status }}</span>
+          {% endif %}
+        </div>
+      </div>
+      
+      <!-- Route and schedule details -->
+      <div style="border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); padding: 1.5rem 0; margin-bottom: 1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div>
+          <label class="text-muted" style="font-size:0.8rem; text-transform:uppercase; font-weight:500; display:block; margin-bottom:0.25rem;">Journey</label>
+          <span style="font-weight:600; font-size:1.1rem;">{{ booking.schedule.route.source }} to {{ booking.schedule.route.destination }}</span>
+          <span class="text-muted" style="display:block; font-size:0.9rem; margin-top:0.25rem;">Distance: {{ booking.schedule.route.distance_km }} KM</span>
+        </div>
+        <div>
+          <label class="text-muted" style="font-size:0.8rem; text-transform:uppercase; font-weight:500; display:block; margin-bottom:0.25rem;">Bus Fleet Details</label>
+          <span style="font-weight:600; font-size:1.1rem;">{{ booking.schedule.bus.name }}</span>
+          <span class="text-muted" style="display:block; font-size:0.9rem; margin-top:0.25rem;">Type: {{ booking.schedule.bus.type }} | No: {{ booking.schedule.bus.bus_number }}</span>
+        </div>
+      </div>
+      
+      <!-- Timeline timing details -->
+      <div style="background:var(--bg-secondary); border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+        <div>
+          <label class="text-muted" style="font-size:0.8rem; display:block; margin-bottom:0.25rem;">Boarding (Departure)</label>
+          <strong style="font-size:1.1rem; display:block;">{{ booking.schedule.departure_time.strftime('%I:%M %p') }}</strong>
+          <span class="text-secondary" style="font-size:0.85rem;">{{ booking.schedule.journey_date.strftime('%B %d, %Y') }}</span>
+        </div>
+        <div>
+          <label class="text-muted" style="font-size:0.8rem; display:block; margin-bottom:0.25rem;">Arrival Destination</label>
+          <strong style="font-size:1.1rem; display:block;">{{ booking.schedule.arrival_time.strftime('%I:%M %p') }}</strong>
+          <span class="text-secondary" style="font-size:0.85rem;">{{ booking.schedule.arrival_time.strftime('%B %d, %Y') }}</span>
+        </div>
+      </div>
+      
+      <!-- Passenger and Seat Allocation Table -->
+      <div style="margin-bottom:1.5rem;">
+        <label class="text-muted" style="font-size:0.8rem; text-transform:uppercase; font-weight:500; display:block; margin-bottom:0.5rem;">Passengers</label>
+        <table class="ticket-passengers-table">
+          <thead>
+            <tr>
+              <th>Passenger Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th style="text-align:center;">Seat Allocation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for passenger in booking.passengers %}
+              <tr>
+                <td>{{ passenger.name }}</td>
+                <td>{{ passenger.age }} yrs</td>
+                <td>{{ passenger.gender }}</td>
+                <td style="text-align:center; font-weight:700; color:var(--primary);">Seat #{{ passenger.seat_number }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Payment Ledger Details -->
+      <div style="border-top:1px solid var(--border-color); padding-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div>
+          {% if booking.payment %}
+            <label class="text-muted" style="font-size:0.8rem; display:block; margin-bottom:0.25rem;">Transaction Ledger</label>
+            <span class="text-secondary" style="font-size:0.9rem; display:block;">ID: <strong>{{ booking.payment.transaction_id }}</strong></span>
+            <span class="text-secondary" style="font-size:0.9rem; display:block;">Method: {{ booking.payment.method }} | Status: {{ booking.payment.status }}</span>
+          {% endif %}
+        </div>
+        <div style="text-align:right;">
+          <label class="text-muted" style="font-size:0.8rem; display:block; margin-bottom:0.25rem;">Total Ticket Fare</label>
+          <span style="font-size:1.5rem; font-weight:800; color:var(--primary);">Rs. {{ booking.total_amount|round(2) }}</span>
+        </div>
+      </div>
+      
+      <!-- Stylized Barcode -->
+      <div class="ticket-barcode-wrapper">
+        <div class="barcode-strip"></div>
+        <span class="text-muted" style="font-size:0.8rem; font-family:monospace;">PNR-{{ booking.pnr }}</span>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- Interactive Action Buttons -->
+  <div class="ticket-actions" style="max-width:650px; margin: 0.5rem auto 4rem auto; display:flex; gap:1rem; justify-content:space-between;">
+    <a href="{{ url_for('views.profile') }}" class="btn btn-secondary">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:1.25rem; width:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+      My Bookings
+    </a>
+    
+    <div style="display:flex; gap:1rem;">
+      <button id="print-ticket-btn" class="btn btn-secondary">
+        <!-- Inline Printer Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:1.25rem; width:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+        Print Ticket
+      </button>
+      
+      <a id="download-pdf-btn" href="{{ url_for('api.download_pdf', pnr=booking.pnr) }}" class="btn btn-primary">
+        <!-- Inline Download Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="height:1.25rem; width:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+        Download PDF
+      </a>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ticket.js') }}"></script>
+{% endblock %}
